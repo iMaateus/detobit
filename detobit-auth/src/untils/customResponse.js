@@ -1,3 +1,5 @@
+'use strict'
+
 exports.createResponse = function (message, code) {
     code = code || 200;
     return {

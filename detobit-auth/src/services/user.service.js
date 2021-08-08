@@ -1,3 +1,5 @@
+'use strict'
+
 const User = require('../models/user');
 const MongoRepository = require('../repository/mongo.repository.js');
 

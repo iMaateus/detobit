@@ -1,3 +1,5 @@
+'use strict'
+
 const customResponse = require('../untils/customResponse');
 const token = require('../untils/token');
 const User = require('../models/user');
@@ -5,7 +7,9 @@ const MongoConnection = require('../connections/mongo.connection');
 const MongoRepository = require('../repository/mongo.repository.js');
 const UserService = require('../services/user.service.js');
 
-module.exports.singup = async (event, context, callback) => {
+module.exports.singup = async (event, context) => {
+    context.callbackWaitsForEmptyEventLoop = false;
+
     try {
         const data = JSON.parse(event.body);
 
@@ -27,8 +31,6 @@ module.exports.singup = async (event, context, callback) => {
         }
 
         await MongoRepository.insertOne(user);
-
-        await MongoConnection.disconnect();
 
         return customResponse.createResponse(token.createToken(user));
     }

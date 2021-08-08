@@ -4,7 +4,6 @@
   "description": "Serverless REST API with MongoDB using Mongoose and Bluebird",
   "main": "handler.js",
   "dependencies": {
-    "bluebird": "^3.5.0",
     "jsonwebtoken": "^8.5.1",
     "mongoose": "^5.13.5",
     "validator": "^7.0.0"

@@ -1,3 +1,5 @@
+'use strict'
+
 exports.findOne = async function (model, query) {
     return await model.findOne(query.expression, query.projection)
 }
