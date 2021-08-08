@@ -34,6 +34,14 @@ functions:
           method: post
           cors: true
           private: true
+  signup:
+    handler: src/handlers/singup.singup
+    events:
+      - http:
+          path: singup
+          method: post
+          cors: true
+          private: true
 
 plugins:
 - serverless-offline

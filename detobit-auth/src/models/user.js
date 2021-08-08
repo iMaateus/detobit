@@ -1,15 +1,36 @@
-const mongoose = require('mongoose')
+const mongoose = require('mongoose');
+const validator = require('validator');
 
 const userSchema = new mongoose.Schema(
     {
-        firstname: String,
-        lastname: String,
-        email: String,
+        firstname: {
+            type: String,
+            required: true
+        },
+        lastname: {
+            type: String,
+            required: true
+        },
+        email: {
+            type: String,
+            required: true,
+            validate: {
+                validator(email) {
+                    return validator.isEmail(email);
+                },
+            },
+        },
+        photo: {
+            type: String,
+            required: false,
+            validate: {
+                validator(photo) {
+                    return validator.isUrl(photo);
+                },
+            },
+        },
         password: String,
-        photo: String,
-        biography: String,
-        createdAt: Date,
-        updatedAt: Date
+        biography: String
     },
     {
         timestamps: true,
