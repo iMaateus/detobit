@@ -1,6 +1,4 @@
-'use strict'
-
-const jwt = require('jsonwebtoken')
+const jwt = require('jsonwebtoken');
 
 exports.createToken = function (user) {
     return jwt.sign(
@@ -13,3 +11,25 @@ exports.createToken = function (user) {
             expiresIn: '7d'
         })
 }
+
+exports.validateToken = function (token) {
+    return jwt.verify(token.replace('Bearer ', ''), process.env.TOKEN_SECRET);
+}
+
+exports.generatePolicy = function (principalId, methodArn) {
+    const apiGatewayWildcard = methodArn.split('/', 2).join('/') + '/*';
+
+    return {
+        principalId,
+        policyDocument: {
+            Version: '2012-10-17',
+            Statement: [
+                {
+                    Action: 'execute-api:Invoke',
+                    Effect: 'Allow',
+                    Resource: apiGatewayWildcard,
+                },
+            ],
+        },
+    };
+};

@@ -1,0 +1,33 @@
+service: detobit-games
+useDotenv: true
+
+custom:
+  stage: ${opt:stage, 'dev'}
+  authorizer: arn:aws:lambda:${aws:region}:${aws:accountId}:function:detobit-${opt:stage, 'dev'}-validate
+  importApiGateway:
+    name: ${opt:stage, 'dev'}-detobit
+
+provider:
+  name: aws
+  runtime: nodejs12.x
+  region: us-east-1
+  memorySize: 128
+  logRetentionInDays: 1
+  versionFunctions: false
+  lambdaHashingVersion: 20201221
+  environment: ${file(./${self:custom.stage}.env.json)}
+
+functions:
+  games:
+    handler: src/handlers/games.games
+    events:
+      - http:
+          path: games
+          method: post
+          cors: true
+          private: true
+          authorizer: ${self:custom.authorizer}
+
+plugins:
+- serverless-offline
+- serverless-import-apigateway

@@ -1,4 +1,4 @@
-service: detobit-auth
+service: detobit
 useDotenv: true
 
 custom:
@@ -15,10 +15,10 @@ provider:
   environment: ${file(./${self:custom.stage}.env.json)}
   apiGateway:
     apiKeys:
-      - free:
-          - ${opt:stage}-freekey
+      - apikey:
+          - apikey
     usagePlan:
-      - free:
+      - apikey:
           quota:
             limit: 5000
             period: MONTH
@@ -27,6 +27,8 @@ provider:
             rateLimit: 100
 
 functions:
+  validate:
+    handler: src/handlers/auth.validate
   auth:
     handler: src/handlers/auth.auth
     events:

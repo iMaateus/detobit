@@ -1,5 +1,3 @@
-'use strict'
-
 const customResponse = require('../untils/customResponse');
 const token = require('../untils/token');
 const User = require('../models/user');

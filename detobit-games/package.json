@@ -1,0 +1,16 @@
+{
+  "name": "detobit-games",
+  "version": "1.0.0",
+  "description": "Serverless MongoDB using Mongoose and Bluebird",
+  "main": "src/handlers/auth.js",
+  "dependencies": {
+    "mongoose": "^5.13.5",
+    "validator": "^7.0.0"
+  },
+  "author": "Matheus L. Martins <matheusl.martins@outlook.com>",
+  "license": "MIT",
+  "devDependencies": {
+    "serverless-import-apigateway": "^1.1.1",
+    "serverless-offline": "^8.0.0"
+  }
+}
