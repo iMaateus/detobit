@@ -1,9 +1,9 @@
 const customResponse = require('../untils/customResponse');
 const token = require('../untils/token');
 const User = require('../models/user');
-const MongoConnection = require('../connections/mongo.connection');
-const MongoRepository = require('../repository/mongo.repository.js');
-const UserService = require('../services/user.service.js');
+const mongoConnection = require('../connections/mongo.connection');
+const mongoRepository = require('../repository/mongo.repository.js');
+const userService = require('../services/user.service.js');
 
 module.exports.singup = async (event, context) => {
     context.callbackWaitsForEmptyEventLoop = false;
@@ -22,13 +22,13 @@ module.exports.singup = async (event, context) => {
             return customResponse.createResponse("Usuário inválido", 400);
         }
 
-        await MongoConnection.connect();
+        await mongoConnection.connect();
 
-        if (await UserService.findUserByEmail(data.email)) {
+        if (await userService.findUserByEmail(data.email)) {
             return customResponse.createResponse("Email já cadastrado", 409);
         }
 
-        await MongoRepository.insertOne(user);
+        await mongoRepository.insertOne(user);
 
         return customResponse.createResponse(token.createToken(user));
     }

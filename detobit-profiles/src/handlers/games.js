@@ -1,14 +1,14 @@
 const customResponse = require('../untils/customResponse');
-const mongoConnection = require('../connections/mongo.connection');
-const gameService = require('../services/game.service.js');
+const MongoConnection = require('../connections/mongo.connection');
+const GameService = require('../services/game.service.js');
 
 module.exports.search = async (event, context) => {
     context.callbackWaitsForEmptyEventLoop = false;
     
     try {
-        await mongoConnection.connect();
+        await MongoConnection.connect();
 
-        let games = await gameService.findGames(event.queryStringParameters);
+        let games = await GameService.findGames(event.queryStringParameters);
 
         return customResponse.createResponse(games);
     }
@@ -21,9 +21,9 @@ module.exports.highlights = async (event, context) => {
     context.callbackWaitsForEmptyEventLoop = false;
     
     try {
-        await mongoConnection.connect();
+        await MongoConnection.connect();
 
-        let games = await gameService.findHighlightGames(event.queryStringParameters);
+        let games = await GameService.findHighlightGames(event.queryStringParameters);
 
         return customResponse.createResponse(games);
     }

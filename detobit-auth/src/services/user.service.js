@@ -1,5 +1,5 @@
 const User = require('../models/user');
-const MongoRepository = require('../repository/mongo.repository.js');
+const mongoRepository = require('../repository/mongo.repository.js');
 
 exports.findUserByEmail = async function (email) {
     let query = {
@@ -9,5 +9,5 @@ exports.findUserByEmail = async function (email) {
         projection: 'email'
     }
 
-    return await MongoRepository.findOne(User, query);
+    return await mongoRepository.findOne(User, query);
 }

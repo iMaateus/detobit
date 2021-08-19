@@ -1,5 +1,5 @@
 const Game = require('../models/game');
-const mongoRepository = require('../repository/mongo.repository.js');
+const MongoRepository = require('../repository/mongo.repository.js');
 
 exports.findGames = async function (options) {
     let filter = {};
@@ -8,7 +8,7 @@ exports.findGames = async function (options) {
         filter = { popularNames: { '$regex': options.search, '$options': 'i' } }
     }
 
-    return await mongoRepository.findMany(Game, filter, options);
+    return await MongoRepository.findMany(Game, filter, options);
 }
 
 exports.findHighlightGames = async function (options) {
@@ -16,5 +16,5 @@ exports.findHighlightGames = async function (options) {
         'highlight': true
     }
 
-    return await mongoRepository.findMany(Game, filter, options);
+    return await MongoRepository.findMany(Game, filter, options);
 }
