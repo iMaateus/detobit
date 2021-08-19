@@ -18,15 +18,23 @@ provider:
   environment: ${file(./${self:custom.stage}.env.json)}
 
 functions:
-  games:
-    handler: src/handlers/games.games
+  search:
+    handler: src/handlers/games.search
     events:
       - http:
-          path: games
-          method: post
+          path: games/search
+          method: get
           cors: true
           private: true
-          authorizer: ${self:custom.authorizer}
+          # authorizer: ${self:custom.authorizer}
+  highlights:
+    handler: src/handlers/games.highlights
+    events:
+      - http:
+          path: games/highlights
+          method: get
+          cors: true
+          private: true
 
 plugins:
 - serverless-offline
