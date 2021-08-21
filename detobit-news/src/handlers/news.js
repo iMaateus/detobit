@@ -1,18 +1,18 @@
-const customResponse = require('../untils/customResponse');
-const mongoConnection = require('../connections/mongo.connection');
+const customResponse = require('detobit-core/src/utils/customResponse');
+const mongoConnection = require('detobit-core/src/connections/mongo.connection');
 const newsService = require('../services/news.service.js');
 
-module.exports.search = async (event, context) => {
+module.exports.search = async (event, context, callback) => {
     context.callbackWaitsForEmptyEventLoop = false;
     
     try {
         await mongoConnection.connect();
 
-        let games = await newsService.findNews(event.queryStringParameters);
+        let news = await newsService.findNews(event.queryStringParameters);
 
-        return customResponse.createResponse(games);
+        callback(null, customResponse.createResponse(news));
     }
     catch (err) {
-        return customResponse.createResponse(err.message, 500);
+        callback(null, customResponse.createResponse(err.message, 500));
     }
 };

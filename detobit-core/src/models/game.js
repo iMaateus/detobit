@@ -72,6 +72,9 @@ const gameSchema = new mongoose.Schema(
                 },
             }
         ],
+        videos: {
+            type: [String]
+        },
         stats: 
         {
             wantPlay: {

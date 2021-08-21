@@ -1,13 +1,10 @@
-const User = require('../models/user');
-const mongoRepository = require('../repository/mongo.repository.js');
+const User = require('detobit-core/src/models/user');
+const mongoRepository = require('detobit-core/src/repository/mongo.repository');
 
-exports.findUserByEmail = async function (email) {
-    let query = {
-        expression: {
-            email: email
-        },
-        projection: 'email'
+exports.findUserByEmail = async function (email, options) {
+    let filter = {
+        'email': email
     }
 
-    return await mongoRepository.findOne(User, query);
+    return await mongoRepository.findOne(User, filter, options);
 }

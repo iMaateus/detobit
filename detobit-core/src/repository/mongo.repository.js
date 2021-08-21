@@ -5,11 +5,14 @@ exports.findOne = async function (model, filter, options) {
 
 exports.findMany = async function (model, filter, options) {
     let query = resolveQuery(options)
-    console.log(filter);
     return await model.find(filter, query.projection, { skip: query.skip, limit: query.limit }).sort([[query.sort, query.asc]])
 }
 
 function resolveQuery(options){
+    if(!options){
+        return {};
+    }
+
     let query = {
         projection: options.projection,
         limit: options.limit,
@@ -18,6 +21,7 @@ function resolveQuery(options){
         asc: options.asc
     }
 
+    if (query.projection == null) query.projection = {};
     if (query.limit != null) query.limit = Number(query.limit);
     if (query.page != null) query.page = Number(query.page);
 

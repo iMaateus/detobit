@@ -1,4 +1,4 @@
-const customResponse = require('../untils/customResponse');
+const customResponse = require('detobit-core/utils/customResponse');
 const MongoConnection = require('../connections/mongo.connection');
 const GameService = require('../services/game.service.js');
 

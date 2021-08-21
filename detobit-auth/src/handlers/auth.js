@@ -1,9 +1,9 @@
-const customResponse = require('../untils/customResponse');
-const token = require('../untils/token');
-const mongoConnection = require('../connections/mongo.connection');
+const customResponse = require('detobit-core/src/utils/customResponse');
+const token = require('detobit-core/src/utils/token');
+const mongoConnection = require('detobit-core/src/connections/mongo.connection');
 const userService = require('../services/user.service.js');
 
-module.exports.auth = async (event, context) => {
+module.exports.auth = async (event, context, callback) => {
     context.callbackWaitsForEmptyEventLoop = false;
 
     try {
@@ -14,20 +14,22 @@ module.exports.auth = async (event, context) => {
         let user = await userService.findUserByEmail(data.email);
 
         if (!user) {
-            return customResponse.createResponse("Credenciais inválidas", 401);
+            callback(null, customResponse.createResponse("Credenciais inválidas", 401));
+            return;
         }
 
-        return customResponse.createResponse(token.createToken(user));
+        callback(null, customResponse.createResponse(token.createToken(user)));
     }
     catch (err) {
-        return customResponse.createResponse(err.message, 500);
+        callback(null, customResponse.createResponse(err.message, 500));
     }
 };
 
-module.exports.validate = async (event, context) => {
+module.exports.validate = async (event, context, callback) => {
     try {
         if (!event.authorizationToken) {
-            return customResponse.createResponse("Unauthorized", 401);
+            callback(null, customResponse.createResponse("Unauthorized", 401));
+            return;
         }
 
         const claims = token.validateToken(event.authorizationToken);
@@ -39,6 +41,6 @@ module.exports.validate = async (event, context) => {
         };
     }
     catch (err) {
-        return customResponse.createResponse(err.message, 500);
+        callback(null, customResponse.createResponse(err.message, 500));
     }
 };

@@ -1,8 +1,8 @@
-const customResponse = require('../untils/customResponse');
-const mongoConnection = require('../connections/mongo.connection');
+const customResponse = require('detobit-core/src/utils/customResponse');
+const mongoConnection = require('detobit-core/src/connections/mongo.connection');
 const gameService = require('../services/game.service.js');
 
-module.exports.search = async (event, context) => {
+module.exports.search = async (event, context, callback) => {
     context.callbackWaitsForEmptyEventLoop = false;
     
     try {
@@ -10,14 +10,14 @@ module.exports.search = async (event, context) => {
 
         let games = await gameService.findGames(event.queryStringParameters);
 
-        return customResponse.createResponse(games);
+        callback(null, customResponse.createResponse(games));
     }
     catch (err) {
-        return customResponse.createResponse(err.message, 500);
+        callback(null, customResponse.createResponse(err.message, 500));
     }
 };
 
-module.exports.highlights = async (event, context) => {
+module.exports.highlights = async (event, context, callback) => {
     context.callbackWaitsForEmptyEventLoop = false;
     
     try {
@@ -25,9 +25,24 @@ module.exports.highlights = async (event, context) => {
 
         let games = await gameService.findHighlightGames(event.queryStringParameters);
 
-        return customResponse.createResponse(games);
+        callback(null, customResponse.createResponse(games));
     }
     catch (err) {
-        return customResponse.createResponse(err.message, 500);
+        callback(null, customResponse.createResponse(err.message, 500));
+    }
+};
+
+module.exports.slug = async (event, context, callback) => {
+    context.callbackWaitsForEmptyEventLoop = false;
+    
+    try {
+        await mongoConnection.connect();
+
+        let game = await gameService.findGameBySlug(event.pathParameters.slug, event.queryStringParameters);
+
+        callback(null, customResponse.createResponse(game));
+    }
+    catch (err) {
+        callback(null, customResponse.createResponse(err.message, 500));
     }
 };

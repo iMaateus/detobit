@@ -4,7 +4,9 @@ exports.createToken = function (user) {
     return jwt.sign(
         {
             id: user._id,
-            email: user.email
+            email: user.email,
+            photo: user.photo,
+            nickname: user.nickname
         },
         process.env.TOKEN_SECRET,
         {

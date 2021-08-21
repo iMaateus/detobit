@@ -1,8 +1,8 @@
-const customResponse = require('../untils/customResponse');
-const mongoConnection = require('../connections/mongo.connection');
+const customResponse = require('detobit-core/src/utils/customResponse');
+const mongoConnection = require('detobit-core/src/connections/mongo.connection');
 const reviewService = require('../services/review.service.js');
 
-module.exports.search = async (event, context) => {
+module.exports.search = async (event, context, callback) => {
     context.callbackWaitsForEmptyEventLoop = false;
     
     try {
@@ -10,9 +10,9 @@ module.exports.search = async (event, context) => {
 
         let reviews = await reviewService.findReviews(event.queryStringParameters);
 
-        return customResponse.createResponse(reviews);
+        callback(null, customResponse.createResponse(reviews));
     }
     catch (err) {
-        return customResponse.createResponse(err.message, 500);
+        callback(null, customResponse.createResponse(err.message, 500));
     }
 };

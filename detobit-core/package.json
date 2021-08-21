@@ -1,0 +1,11 @@
+{
+    "name": "detobit-core",
+    "version": "1.0.0",
+    "description": "Serverless MongoDB using Mongoose and Bluebird",
+    "author": "Matheus L. Martins <matheusl.martins@outlook.com>",
+    "license": "MIT",
+    "dependencies": {
+        "jsonwebtoken": "^8.5.1",
+        "mongoose": "^5.13.5"
+    }
+}

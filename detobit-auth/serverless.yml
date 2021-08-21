@@ -12,7 +12,7 @@ provider:
   logRetentionInDays: 1
   versionFunctions: false
   lambdaHashingVersion: 20201221
-  environment: ${file(./${self:custom.stage}.env.json)}
+  environment: ${file(node_modules/detobit-core/${self:custom.stage}.env.json)}
   apiGateway:
     apiKeys:
       - apikey:
@@ -37,14 +37,14 @@ functions:
           method: post
           cors: true
           private: true
-  signup:
-    handler: src/handlers/singup.singup
-    events:
-      - http:
-          path: singup
-          method: post
-          cors: true
-          private: true
+  # signup:
+  #   handler: src/handlers/singup.singup
+  #   events:
+  #     - http:
+  #         path: singup
+  #         method: post
+  #         cors: true
+  #         private: true
 
 plugins:
 - serverless-offline

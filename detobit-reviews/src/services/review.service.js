@@ -1,5 +1,5 @@
-const Review = require('../models/review');
-const mongoRepository = require('../repository/mongo.repository.js');
+const Review = require('detobit-core/src/models/review');
+const mongoRepository = require('detobit-core/src/repository/mongo.repository.js');
 
 exports.findReviews = async function (options) {
     let filter = {};
