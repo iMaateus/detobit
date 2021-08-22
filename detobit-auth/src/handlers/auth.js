@@ -1,35 +1,24 @@
-const customResponse = require('detobit-core/src/utils/customResponse');
+const middy = require('detobit-core/node_modules/@middy/core')
+const parser = require('detobit-core/node_modules/@middy/http-json-body-parser')
+const doNotWaitForEmptyEventLoop = require('detobit-core/node_modules/@middy/do-not-wait-for-empty-event-loop')
+
 const token = require('detobit-core/src/utils/token');
-const mongoConnection = require('detobit-core/src/connections/mongo.connection');
+const requestHandler = require('detobit-core/src/middlewares/requestHandler');
+const httpError = require('detobit-core/node_modules/http-errors');
+
+const customResponse = require('detobit-core/src/utils/customResponse');
 const userService = require('../services/user.service.js');
 
-module.exports.auth = async (event, context, callback) => {
-    context.callbackWaitsForEmptyEventLoop = false;
-
-    try {
-        const data = JSON.parse(event.body);
-
-        await mongoConnection.connect();
-
-        let user = await userService.findUserByEmail(data.email);
-
-        if (!user) {
-            callback(null, customResponse.createResponse("Credenciais inválidas", 401));
-            return;
-        }
-
-        callback(null, customResponse.createResponse(token.createToken(user)));
-    }
-    catch (err) {
-        callback(null, customResponse.createResponse(err.message, 500));
-    }
-};
+module.exports.auth = middy(async (event, context, callback) => {
+    return await userService.generateToken(event.body.login);
+}).use(parser())
+    .use(doNotWaitForEmptyEventLoop({ runOnError: true }))
+    .use(requestHandler())
 
 module.exports.validate = async (event, context, callback) => {
     try {
         if (!event.authorizationToken) {
-            callback(null, customResponse.createResponse("Unauthorized", 401));
-            return;
+            return customResponse.createResponse("Unauthorized", 401);
         }
 
         const claims = token.validateToken(event.authorizationToken);
@@ -41,6 +30,6 @@ module.exports.validate = async (event, context, callback) => {
         };
     }
     catch (err) {
-        callback(null, customResponse.createResponse(err.message, 500));
+        callback('Unauthorized');
     }
 };

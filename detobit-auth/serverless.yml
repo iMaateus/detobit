@@ -24,7 +24,7 @@ provider:
             period: MONTH
           throttle:
             burstLimit: 200
-            rateLimit: 100
+            rateLimit: 100      
 
 functions:
   validate:

@@ -1,18 +1,13 @@
-const customResponse = require('detobit-core/src/utils/customResponse');
-const mongoConnection = require('detobit-core/src/connections/mongo.connection');
-const reviewService = require('../services/review.service.js');
+const middy = require('detobit-core/node_modules/@middy/core')
+const parser = require('detobit-core/node_modules/@middy/http-json-body-parser')
+const doNotWaitForEmptyEventLoop = require('detobit-core/node_modules/@middy/do-not-wait-for-empty-event-loop')
 
-module.exports.search = async (event, context, callback) => {
-    context.callbackWaitsForEmptyEventLoop = false;
-    
-    try {
-        await mongoConnection.connect();
+const requestHandler = require('detobit-core/src/middlewares/requestHandler');
 
-        let reviews = await reviewService.findReviews(event.queryStringParameters);
+const reviewService = require('../services/review.service');
 
-        callback(null, customResponse.createResponse(reviews));
-    }
-    catch (err) {
-        callback(null, customResponse.createResponse(err.message, 500));
-    }
-};
+module.exports.search = middy(async (event, context, callback) => {
+    return await reviewService.findReviews(event.queryStringParameters);
+}).use(parser())
+    .use(doNotWaitForEmptyEventLoop({ runOnError: true }))
+    .use(requestHandler())

@@ -26,7 +26,6 @@ functions:
           method: get
           cors: true
           private: true
-          # authorizer: ${self:custom.authorizer}
   highlights:
     handler: src/handlers/games.highlights
     events:
@@ -43,6 +42,15 @@ functions:
           method: get
           cors: true
           private: true
+  progression:
+    handler: src/handlers/progression.create
+    events:
+      - http:
+          path: games/progression
+          method: post
+          cors: true
+          private: true
+          authorizer: ${self:custom.authorizer}
 
 plugins:
 - serverless-offline

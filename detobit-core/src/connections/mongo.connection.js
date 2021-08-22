@@ -4,7 +4,6 @@ let connection = null;
 
 exports.connect = async () => {
     if (connection == null) {
-        console.log("novaa")
         connection = await mongoose.connect(process.env.MONGODB, {
             useUnifiedTopology: true,
             useNewUrlParser: true,
@@ -12,8 +11,5 @@ exports.connect = async () => {
             socketTimeoutMS: 2000000,
             keepAlive: true
         });
-    }else
-    {
-        console.log("velhaa")
     }
 };

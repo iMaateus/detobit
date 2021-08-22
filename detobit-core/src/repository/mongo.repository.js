@@ -1,11 +1,25 @@
+const mongoConnection = require('../connections/mongo.connection');
+
 exports.findOne = async function (model, filter, options) {
     let query = resolveQuery(options)
+    await mongoConnection.connect();
     return await model.findOne(filter, query.projection)
 }
 
 exports.findMany = async function (model, filter, options) {
     let query = resolveQuery(options)
+    await mongoConnection.connect();
     return await model.find(filter, query.projection, { skip: query.skip, limit: query.limit }).sort([[query.sort, query.asc]])
+}
+
+exports.updateOne = async function (model, filter, update, upsert) {
+    await mongoConnection.connect();
+    return await model.updateOne(filter, update, {upsert: true})
+}
+
+exports.deleteOne = async function (model, filter) {
+    await mongoConnection.connect();
+    return await model.deleteOne(filter)
 }
 
 function resolveQuery(options){

@@ -1,4 +1,5 @@
 const jwt = require('jsonwebtoken');
+const jwtdecode = require('jwt-decode');
 
 exports.createToken = function (user) {
     return jwt.sign(
@@ -35,3 +36,7 @@ exports.generatePolicy = function (principalId, methodArn) {
         },
     };
 };
+
+exports.identity = function (token) {
+    return jwtdecode(token);
+}

@@ -2,7 +2,7 @@ const mongoose = require('mongoose');
 
 const reviewSchema = new mongoose.Schema(
     {
-        user: 
+        user:
         {
             _id: {
                 type: mongoose.Schema.Types.ObjectId,
@@ -20,7 +20,7 @@ const reviewSchema = new mongoose.Schema(
                 type: Boolean
             }
         },
-        game: 
+        game:
         {
             _id: {
                 type: mongoose.Schema.Types.ObjectId,

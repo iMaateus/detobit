@@ -1,48 +1,25 @@
-const customResponse = require('detobit-core/src/utils/customResponse');
-const mongoConnection = require('detobit-core/src/connections/mongo.connection');
-const gameService = require('../services/game.service.js');
+const middy = require('detobit-core/node_modules/@middy/core')
+const parser = require('detobit-core/node_modules/@middy/http-json-body-parser')
+const doNotWaitForEmptyEventLoop = require('detobit-core/node_modules/@middy/do-not-wait-for-empty-event-loop')
 
-module.exports.search = async (event, context, callback) => {
-    context.callbackWaitsForEmptyEventLoop = false;
-    
-    try {
-        await mongoConnection.connect();
+const requestHandler = require('detobit-core/src/middlewares/requestHandler');
 
-        let games = await gameService.findGames(event.queryStringParameters);
+const gameService = require('../services/game.service');
 
-        callback(null, customResponse.createResponse(games));
-    }
-    catch (err) {
-        callback(null, customResponse.createResponse(err.message, 500));
-    }
-};
+module.exports.search = middy(async (event, context) => {
+    return await gameService.findGames(event.queryStringParameters);
+}).use(parser())
+    .use(doNotWaitForEmptyEventLoop({ runOnError: true }))
+    .use(requestHandler())
 
-module.exports.highlights = async (event, context, callback) => {
-    context.callbackWaitsForEmptyEventLoop = false;
-    
-    try {
-        await mongoConnection.connect();
+module.exports.highlights = middy(async (event, context) => {
+    return await gameService.findHighlightGames(event.queryStringParameters);
+}).use(parser())
+    .use(doNotWaitForEmptyEventLoop({ runOnError: true }))
+    .use(requestHandler())
 
-        let games = await gameService.findHighlightGames(event.queryStringParameters);
-
-        callback(null, customResponse.createResponse(games));
-    }
-    catch (err) {
-        callback(null, customResponse.createResponse(err.message, 500));
-    }
-};
-
-module.exports.slug = async (event, context, callback) => {
-    context.callbackWaitsForEmptyEventLoop = false;
-    
-    try {
-        await mongoConnection.connect();
-
-        let game = await gameService.findGameBySlug(event.pathParameters.slug, event.queryStringParameters);
-
-        callback(null, customResponse.createResponse(game));
-    }
-    catch (err) {
-        callback(null, customResponse.createResponse(err.message, 500));
-    }
-};
+module.exports.slug = middy(async (event, context) => {
+    return await gameService.findGameBySlug(event.pathParameters.slug, event.queryStringParameters);
+}).use(parser())
+    .use(doNotWaitForEmptyEventLoop({ runOnError: true }))
+    .use(requestHandler())
